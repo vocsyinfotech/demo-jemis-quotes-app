@@ -1,17 +1,12 @@
 package com.example.learninlife;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
-
 import androidx.annotation.Nullable;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -39,18 +34,18 @@ public class My_database extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM categories", null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                Bitmap bm = null;
-                try {
-                    bm = getBitmapFromAsset("category_images/category" + itemList.size() + ".png");
-                    Log.e("bmName", "bmh==>" + bm.getHeight() + " " + "bmw==>" + bm.getWidth() + "=====" + itemList.size() + "");
-                } catch (IOException e) {
-                    e.printStackTrace();
-
-                    Log.e("IOException", "" + "=====" + itemList.size() + "");
-                }
+//                Bitmap bm = null;
+//                try {
+//                    bm = getBitmapFromAsset("category_images/category" + itemList.size() + ".png");
+//                    Log.e("bmName", "bmh==>" + bm.getHeight() + " " + "bmw==>" + bm.getWidth() + "=====" + itemList.size() + "");
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//
+//                    Log.e("IOException", "" + "=====" + itemList.size() + "");
+//                }
 
                 Log.e("itemslist", cursor.getString(1));
-                items itm = new items(cursor.getInt(0), cursor.getString(1), bm);
+                items itm = new items(cursor.getInt(0), cursor.getString(1), null);
                 itemList.add(itm);
             }
             cursor.close();
@@ -62,13 +57,13 @@ public class My_database extends SQLiteOpenHelper {
         return null;
     }
 
-    private Bitmap getBitmapFromAsset(String strName) throws IOException {
-        AssetManager assetManager = context.getAssets();
-        InputStream istr = assetManager.open(strName);
-        Bitmap bitmap = BitmapFactory.decodeStream(istr);
-        istr.close();
-        return bitmap;
-    }
+//    private Bitmap getBitmapFromAsset(String strName) throws IOException {
+//        AssetManager assetManager = context.getAssets();
+//        InputStream istr = assetManager.open(strName);
+//        Bitmap bitmap = BitmapFactory.decodeStream(istr);
+//        istr.close();
+//        return bitmap;
+//    }
 
     public ArrayList<Quotes_list> getQuotes(int category_id) throws IOException {
         quotesList.clear();
@@ -197,21 +192,21 @@ public class My_database extends SQLiteOpenHelper {
         return fav;
     }
 
-  public ArrayList<Quotes_list> getQuotesOfTheDay(int quote_id) {
-        //ArrayList qod=new ArrayList();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM contents where id=" + quote_id, null);
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                Quotes_list q = new Quotes_list(cursor.getInt(0), cursor.getInt(2), cursor.getString(1), cursor.getInt(3));
-                quotesList.add(q);
-            }
-            cursor.close();
-            db.close();
-            return quotesList;
-        }
-        return null;
-    }
+//    public ArrayList<Quotes_list> getQuotesOfTheDay(int quote_id) {
+//        //ArrayList qod=new ArrayList();
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        Cursor cursor = db.rawQuery("SELECT * FROM contents where id=" + quote_id, null);
+//        if (cursor != null) {
+//            while (cursor.moveToNext()) {
+//                Quotes_list q = new Quotes_list(cursor.getInt(0), cursor.getInt(2), cursor.getString(1), cursor.getInt(3));
+//                quotesList.add(q);
+//            }
+//            cursor.close();
+//            db.close();
+//            return quotesList;
+//        }
+//        return null;
+//    }
 
     public String getCategoryName(int catId) {
         String s = "";
