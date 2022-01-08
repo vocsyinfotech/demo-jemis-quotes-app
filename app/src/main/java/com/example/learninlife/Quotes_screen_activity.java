@@ -1,26 +1,22 @@
 package com.example.learninlife;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class Quotes_screen_activity extends AppCompatActivity implements Quote_interface {
@@ -52,12 +48,12 @@ public class Quotes_screen_activity extends AppCompatActivity implements Quote_i
             }
         });
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = prefs.edit();
-        if (prefs.contains("like_arratlist")) {
-            liked_al = getArrayList("like_arratlist");
-        }
-        editor.apply();
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+//        SharedPreferences.Editor editor = prefs.edit();
+//        if (prefs.contains("like_arratlist")) {
+//            liked_al = getArrayList("like_arratlist");
+//        }
+//        editor.apply();
         recyclerView = findViewById(R.id.quotes_recyclerView);
         database = new My_database(this);
         database.openDataBase();
@@ -69,9 +65,9 @@ public class Quotes_screen_activity extends AppCompatActivity implements Quote_i
 
         if (getIntent().getExtras().getInt("ArrayFoundOrNot") == 1) {
             int category_id = getIntent().getIntExtra("category_id", 0);
-            quotes_lists = database.get_like_list();
 
-            Toast.makeText(this, "array Found quotes", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "array Found quotes", Toast.LENGTH_SHORT).show();
+            quotes_lists = database.get_like_list();
             Quotes_list_adapter adapter0 = new Quotes_list_adapter(this, quotes_lists);
             recyclerView.setAdapter(adapter0);
         } else {
@@ -89,14 +85,14 @@ public class Quotes_screen_activity extends AppCompatActivity implements Quote_i
         }
     }
 
-    public ArrayList<Integer> getArrayList(String key) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        Gson gson = new Gson();
-        String json = prefs.getString(key, null);
-        Type type = new TypeToken<ArrayList<Integer>>() {
-        }.getType();
-        return gson.fromJson(json, type);
-    }
+//    public ArrayList<Integer> getArrayList(String key) {
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+//        Gson gson = new Gson();
+//        String json = prefs.getString(key, null);
+//        Type type = new TypeToken<ArrayList<Integer>>() {
+//        }.getType();
+//        return gson.fromJson(json, type);
+//    }
 
     @Override
     public void shareQuote(String content, LinearLayout textview, CardView imageView) {
@@ -124,6 +120,7 @@ public class Quotes_screen_activity extends AppCompatActivity implements Quote_i
         });
         menu.show();
     }
+
 
 //    public void loadView(CardView cardView) {
 //        View view = cardView;
@@ -216,6 +213,7 @@ public class Quotes_screen_activity extends AppCompatActivity implements Quote_i
 //        return returnedBitmap;
 //    }
 //
+
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(Quotes_screen_activity.this, MainActivity.class);

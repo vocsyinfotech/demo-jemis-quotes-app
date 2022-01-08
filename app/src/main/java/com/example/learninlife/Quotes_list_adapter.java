@@ -3,9 +3,19 @@ package com.example.learninlife;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ContextWrapper;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +34,11 @@ import com.varunest.sparkbutton.SparkButton;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 public class Quotes_list_adapter extends RecyclerView.Adapter<Quotes_list_adapter.MyClass> {
@@ -115,6 +131,15 @@ public class Quotes_list_adapter extends RecyclerView.Adapter<Quotes_list_adapte
                 }
             }
         });
+        holder.save_lay.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View v) {
+//                Toast.makeText(q_activity, "save", Toast.LENGTH_SHORT).show();
+                loadView(holder.cardView, quotes_lists.get(position).getQuote_id());
+                Log.e("save_image", "save in progress");
+            }
+        });
 //        holder.save_lay.setOnClickListener(new View.OnClickListener() {
 //            @RequiresApi(api = Build.VERSION_CODES.N)
 //            @Override
@@ -170,24 +195,35 @@ public class Quotes_list_adapter extends RecyclerView.Adapter<Quotes_list_adapte
         });
     }
 
+
     public ArrayList<Integer> sendSaveArrayList() {
         return save_al;
     }
 
-//    @RequiresApi(api = Build.VERSION_CODES.N)
-//    public void loadView(CardView cardView, Integer quot_id) {
-//        View view = cardView;
-//
-//        try {
-//            Log.e("loadView", "true");
-//            view.setDrawingCacheEnabled(true);
-//            Bitmap bitmap = getBitmapFromView(view);
-//            view.setDrawingCacheEnabled(false);
-//
+    private void galleryAddPic(String currentPhotoPath) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(currentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        q_activity.sendBroadcast(mediaScanIntent);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void loadView(CardView cardView, Integer quot_id) {
+        View view = cardView;
+
+        try {
+            Log.e("loadView", "true");
+            view.setDrawingCacheEnabled(true);
+            Bitmap bitmap = getBitmapFromView(view);
+            view.setDrawingCacheEnabled(false);
+
+            saveImage(bitmap);
+
 //            Log.e("loadView", "false");
 //
-//            File imageFile = createImageFile(cardView,quot_id);
-//            Log.e("save_image","image saved");
+//            File imageFile = createImageFile(cardView, quot_id);
+//            Log.e("save_image", "image saved");
 //            FileOutputStream outputStream = new FileOutputStream(imageFile);
 //            int quality = 100;
 //            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
@@ -195,7 +231,9 @@ public class Quotes_list_adapter extends RecyclerView.Adapter<Quotes_list_adapte
 //            outputStream.flush();
 //            outputStream.close();
 //
-//            MediaScannerConnection.scanFile(q_activity, new String[]{Environment.getExternalStorageDirectory().toString()}, null, new MediaScannerConnection.OnScanCompletedListener() {
+//            ContextWrapper wrapper = new ContextWrapper(q_activity);
+//
+//            MediaScannerConnection.scanFile(q_activity, new String[]{wrapper.getFilesDir().toString()}, null, new MediaScannerConnection.OnScanCompletedListener() {
 //                /*
 //                 *   (non-Javadoc)
 //                 * @see android.media.MediaScannerConnection.OnScanCompletedListener#onScanCompleted(java.lang.String, android.net.Uri)
@@ -206,41 +244,69 @@ public class Quotes_list_adapter extends RecyclerView.Adapter<Quotes_list_adapte
 //                }
 //            });
 //            Toast.makeText(q_activity, "Saved", Toast.LENGTH_SHORT).show();
-//
-//        } catch (Exception e) {
-//
-//            Log.e("Exception", "" + e.toString());
-//            e.printStackTrace();
-//        }
-//    }
 
-//    @RequiresApi(api = Build.VERSION_CODES.N)
-//    public File createImageFile(CardView cardView, Integer quot_id) throws IOException {
-//        // Create an image file name
-//        Log.e("createImageFile", "createImageFile");
-//        File storageDir = new File(Environment
-//                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/Best Quotes/");
-//        if (!storageDir.exists()) {
-//            Log.e("mkdirs", "mkdirs========" + storageDir.getAbsolutePath());
-//            storageDir.mkdirs();
-//        }
-//        // Date currentDate = new Date(System.currentTimeMillis());
-//        String time = "" + System.currentTimeMillis();
-//        Log.e("save_image", "file path create");
-//
-//        ArrayList<ColorId_and_QuotId> colorCompareList = new ArrayList<>();
-////        colorCompareList=getArrayList("colorId_and_quoteId");
-//        String img_name = "";
-//        for (int i = 0; i < colorCompareList.size(); i++) {
-//            if (colorCompareList.get(i).getQuot_id() == quot_id) {
-//                img_name = String.valueOf(colorCompareList.get(i).getQuot_id() + colorCompareList.get(i).getQuot_id());
-//                Log.e("save_img_name", String.valueOf(colorCompareList.get(i).getQuot_id() + colorCompareList.get(i).getQuot_id()));
-//            }
-//        }
-//
-//        File image = new File(storageDir, img_name + ".jpeg");
-//        Log.e("image", "image===========" + image.getAbsolutePath());
-//        return image;
+        } catch (Exception e) {
+
+            Log.e("Exception", "" + e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    private Bitmap getBitmapFromView(View view) {
+        //Define a bitmap with the same size as the view
+        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        //Bind a canvas to it
+        Canvas canvas = new Canvas(returnedBitmap);
+        //Get the view's background
+        Drawable bgDrawable = view.getBackground();
+        if (bgDrawable != null) {
+            //has background drawable, then draw it on the canvas
+            bgDrawable.draw(canvas);
+        } else {
+            //does not have background drawable, then draw white background on the canvas
+            canvas.drawColor(Color.WHITE);
+        }
+        // draw the view on the canvas
+        view.draw(canvas);
+        //return the bitmap
+        return returnedBitmap;
+    }
+
+    public File createImageFile(CardView cardView, Integer quot_id) throws IOException {
+        // Create an image file name
+        Log.e("createImageFile", "createImageFile");
+        File storageDir = new File(Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/Learn In Life/");
+        if (!storageDir.exists()) {
+            Log.e("mkdirs", "mkdirs========" + storageDir.getAbsolutePath());
+            storageDir.mkdirs();
+        }
+        // Date currentDate = new Date(System.currentTimeMillis());
+        String time = "" + System.currentTimeMillis();
+        Log.e("save_image", "file path create");
+
+        ArrayList<ColorId_and_QuotId> colorCompareList = new ArrayList<>();
+//        colorCompareList=getArrayList("colorId_and_quoteId");
+        String img_name = "";
+        for (int i = 0; i < colorCompareList.size(); i++) {
+            if (colorCompareList.get(i).getQuot_id() == quot_id) {
+                img_name = String.valueOf(colorCompareList.get(i).getQuot_id() + colorCompareList.get(i).getQuot_id());
+                Log.e("save_img_name", String.valueOf(colorCompareList.get(i).getQuot_id() + colorCompareList.get(i).getQuot_id()));
+            }
+        }
+
+        File image = new File(storageDir, img_name + ".jpeg");
+        Log.e("image", "image===========" + image.getAbsolutePath());
+        return image;
+    }
+
+//    private ArrayList<ColorId_and_QuotId> getArrayList(String key) {
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(q_activity);
+//        Gson gson = new Gson();
+//        String json = prefs.getString(key, null);
+//        Type type = new TypeToken<ArrayList<ColorId_and_QuotId>>() {
+//        }.getType();
+//        return gson.fromJson(json, type);
 //    }
 
 //    private Bitmap getBitmapFromView(View view) {
@@ -302,7 +368,7 @@ public class Quotes_list_adapter extends RecyclerView.Adapter<Quotes_list_adapte
 //        editor.apply();
 //    }
 
-//    public ArrayList<ColorId_and_QuotId> getArrayList(String key) {
+    //    public ArrayList<ColorId_and_QuotId> getArrayList(String key) {
 //        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(q_activity);
 //        Gson gson = new Gson();
 //        String json = prefs.getString(key, null);
@@ -333,8 +399,59 @@ public class Quotes_list_adapter extends RecyclerView.Adapter<Quotes_list_adapte
             tv_like = itemView.findViewById(R.id.tv_like);
             like_bt = itemView.findViewById(R.id.like_bt);
 //            tv_save = itemView.findViewById(R.id.tv_save);
-//            save_lay = itemView.findViewById(R.id.save_lay);
+            save_lay = itemView.findViewById(R.id.save_lay);
 //            save_img = itemView.findViewById(R.id.save_img);
+        }
+    }
+
+    private void saveImage(Bitmap bitmap) {
+
+        OutputStream outputStream = null;
+
+        ContextWrapper wrapper = new ContextWrapper(q_activity);
+
+        // 1 BitmapDrawable drawable = (BitmapDrawable) image1.getDrawable();
+
+        // 2 File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "SaveImage");
+
+        File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), q_activity.getString(R.string.app_name));
+        File file = new File(dir, System.currentTimeMillis() + ".jpg");
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+
+        Log.e("TAG", "PATH: " + file.getAbsolutePath());
+
+        try {
+            outputStream = new FileOutputStream(file);
+
+        } catch (FileNotFoundException e) {
+            Log.e("TAG", "saveImage: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+
+        galleryAddPic(file.getAbsolutePath());
+
+        Toast.makeText(q_activity, "SuccessFully Saved", Toast.LENGTH_SHORT).show();
+
+        try {
+
+            outputStream.flush();
+
+        } catch (IOException e) {
+            Log.e("TAG2", "saveImage: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        try {
+            outputStream.close();
+            bitmap.recycle();
+
+        } catch (IOException e) {
+            Log.e("TAG3", "saveImage: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

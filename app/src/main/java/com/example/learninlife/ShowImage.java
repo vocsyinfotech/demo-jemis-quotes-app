@@ -21,12 +21,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 
 public class ShowImage extends AppCompatActivity {
     private static final int REQUEST_CODE = 100;
     ImageView imageView, download;
-    ArrayList<HoriModel> models = new ArrayList<>();
+//    ArrayList<HoriModel> models = new ArrayList<>();
     OutputStream outputStream;
     int image;
 
