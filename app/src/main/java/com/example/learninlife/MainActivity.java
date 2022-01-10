@@ -4,12 +4,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.varunest.sparkbutton.SparkButton;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,9 +19,8 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView horizontalview, recyclerView;
     My_database myDatabase;
     category_adapter adapter;
-    TextView favourite;
+    SparkButton favourite;
     ArrayList<items> item_list = new ArrayList<>();
-//    private DatBaseHelper mDatBaseHelper;
     ArrayList<HoriModel> models = new ArrayList<>();
 
     @Override
@@ -89,4 +89,5 @@ public class MainActivity extends AppCompatActivity {
         alert.show();
 
     }
+
 }

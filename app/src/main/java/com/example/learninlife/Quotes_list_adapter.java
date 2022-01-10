@@ -1,11 +1,13 @@
 package com.example.learninlife;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -19,7 +21,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,6 +49,7 @@ public class Quotes_list_adapter extends RecyclerView.Adapter<Quotes_list_adapte
     ArrayList<Quotes_list> quotes_lists;
     Quote_interface anInterface;
     ArrayList<Integer> save_al = new ArrayList();
+    private static final int REQUEST_CODE = 100;
     My_database database;
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
@@ -135,9 +139,13 @@ public class Quotes_list_adapter extends RecyclerView.Adapter<Quotes_list_adapte
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
-//                Toast.makeText(q_activity, "save", Toast.LENGTH_SHORT).show();
-                loadView(holder.cardView, quotes_lists.get(position).getQuote_id());
-                Log.e("save_image", "save in progress");
+                if (ContextCompat.checkSelfPermission(q_activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    loadView(holder.cardView, quotes_lists.get(position).getQuote_id());
+                    Log.e("save_image", "save in progress");
+                } else {
+                    ActivityCompat.requestPermissions(q_activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
+                }
+
             }
         });
 //        holder.save_lay.setOnClickListener(new View.OnClickListener() {
@@ -272,33 +280,33 @@ public class Quotes_list_adapter extends RecyclerView.Adapter<Quotes_list_adapte
         return returnedBitmap;
     }
 
-    public File createImageFile(CardView cardView, Integer quot_id) throws IOException {
-        // Create an image file name
-        Log.e("createImageFile", "createImageFile");
-        File storageDir = new File(Environment
-                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/Learn In Life/");
-        if (!storageDir.exists()) {
-            Log.e("mkdirs", "mkdirs========" + storageDir.getAbsolutePath());
-            storageDir.mkdirs();
-        }
-        // Date currentDate = new Date(System.currentTimeMillis());
-        String time = "" + System.currentTimeMillis();
-        Log.e("save_image", "file path create");
-
-        ArrayList<ColorId_and_QuotId> colorCompareList = new ArrayList<>();
-//        colorCompareList=getArrayList("colorId_and_quoteId");
-        String img_name = "";
-        for (int i = 0; i < colorCompareList.size(); i++) {
-            if (colorCompareList.get(i).getQuot_id() == quot_id) {
-                img_name = String.valueOf(colorCompareList.get(i).getQuot_id() + colorCompareList.get(i).getQuot_id());
-                Log.e("save_img_name", String.valueOf(colorCompareList.get(i).getQuot_id() + colorCompareList.get(i).getQuot_id()));
-            }
-        }
-
-        File image = new File(storageDir, img_name + ".jpeg");
-        Log.e("image", "image===========" + image.getAbsolutePath());
-        return image;
-    }
+//    public File createImageFile(CardView cardView, Integer quot_id) throws IOException {
+//        // Create an image file name
+//        Log.e("createImageFile", "createImageFile");
+//        File storageDir = new File(Environment
+//                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/Learn In Life/");
+//        if (!storageDir.exists()) {
+//            Log.e("mkdirs", "mkdirs========" + storageDir.getAbsolutePath());
+//            storageDir.mkdirs();
+//        }
+//        // Date currentDate = new Date(System.currentTimeMillis());
+//        String time = "" + System.currentTimeMillis();
+//        Log.e("save_image", "file path create");
+//
+//        ArrayList<ColorId_and_QuotId> colorCompareList = new ArrayList<>();
+////        colorCompareList=getArrayList("colorId_and_quoteId");
+//        String img_name = "";
+//        for (int i = 0; i < colorCompareList.size(); i++) {
+//            if (colorCompareList.get(i).getQuot_id() == quot_id) {
+//                img_name = String.valueOf(colorCompareList.get(i).getQuot_id() + colorCompareList.get(i).getQuot_id());
+//                Log.e("save_img_name", String.valueOf(colorCompareList.get(i).getQuot_id() + colorCompareList.get(i).getQuot_id()));
+//            }
+//        }
+//
+//        File image = new File(storageDir, img_name + ".jpeg");
+//        Log.e("image", "image===========" + image.getAbsolutePath());
+//        return image;
+//    }
 
 //    private ArrayList<ColorId_and_QuotId> getArrayList(String key) {
 //        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(q_activity);
@@ -385,9 +393,9 @@ public class Quotes_list_adapter extends RecyclerView.Adapter<Quotes_list_adapte
         TextView tv_content;
         CardView cardView;
         LinearLayout like_lay, save_lay, copy_lay, share_lay;
-        TextView tv_like, tv_save;
+        TextView tv_like;
         SparkButton like_bt;
-        ImageView save_img;
+
 
         public MyClass(@NonNull @NotNull View itemView) {
             super(itemView);
@@ -398,9 +406,7 @@ public class Quotes_list_adapter extends RecyclerView.Adapter<Quotes_list_adapte
             share_lay = itemView.findViewById(R.id.share_lay);
             tv_like = itemView.findViewById(R.id.tv_like);
             like_bt = itemView.findViewById(R.id.like_bt);
-//            tv_save = itemView.findViewById(R.id.tv_save);
             save_lay = itemView.findViewById(R.id.save_lay);
-//            save_img = itemView.findViewById(R.id.save_img);
         }
     }
 

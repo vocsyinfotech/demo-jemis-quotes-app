@@ -57,14 +57,6 @@ public class My_database extends SQLiteOpenHelper {
         return null;
     }
 
-//    private Bitmap getBitmapFromAsset(String strName) throws IOException {
-//        AssetManager assetManager = context.getAssets();
-//        InputStream istr = assetManager.open(strName);
-//        Bitmap bitmap = BitmapFactory.decodeStream(istr);
-//        istr.close();
-//        return bitmap;
-//    }
-
     public ArrayList<Quotes_list> getQuotes(int category_id) throws IOException {
         quotesList.clear();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -179,8 +171,6 @@ public class My_database extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT favorite FROM contents WHERE id=" + i, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
-               /* Quotes_list q=new Quotes_list(cursor.getInt(0),cursor.getInt(2),cursor.getString(1),cursor.getInt(3));
-                quotesList.add(q);*/
 
                 fav = cursor.getInt(0);
 
