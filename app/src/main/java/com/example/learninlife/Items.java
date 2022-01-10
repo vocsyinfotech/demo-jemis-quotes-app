@@ -1,16 +1,14 @@
 package com.example.learninlife;
 
-import android.graphics.Bitmap;
-
-public class items {
+public class Items {
     int item_id;
     String item_Name;
-    Bitmap bitmap_img;
+    int imgId;
 
-    public items(int item_id, String item_Name, Bitmap bitmap_img) {
+    public Items(int item_id, String item_Name, int imgId) {
         this.item_id = item_id;
         this.item_Name = item_Name;
-        this.bitmap_img = bitmap_img;
+        this.imgId = imgId;
     }
 
     public int getItem_id() {
@@ -28,12 +26,12 @@ public class items {
     public void setItem_Name(String item_Name) {
         this.item_Name = item_Name;
     }
-    public Bitmap getBitmap_img() {
-        return bitmap_img;
+    public int getImageId() {
+        return imgId;
     }
 
-    public void setBitmap_img(Bitmap bitmap_img) {
-        this.bitmap_img = bitmap_img;
+    public void setBitmap_img(int imgId) {
+        this.imgId = imgId;
     }
 
 }

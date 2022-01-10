@@ -46,14 +46,13 @@ public class Quotes_screen_activity extends AppCompatActivity implements Quote_i
         back_bt_img = findViewById(R.id.back_bt_img);
         category_name_tv = findViewById(R.id.category_title);
         Typeface typeface = ResourcesCompat.getFont(this, R.font.font);
+
         category_name_tv.setTypeface(typeface);
 
         back_bt_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent = new Intent(Quotes_screen_activity.this, MainActivity.class);
-                startActivity(intent);
+                onBackPressed();
             }
         });
 
@@ -88,15 +87,6 @@ public class Quotes_screen_activity extends AppCompatActivity implements Quote_i
         }
     }
 
-//    public ArrayList<Integer> getArrayList(String key) {
-//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-//        Gson gson = new Gson();
-//        String json = prefs.getString(key, null);
-//        Type type = new TypeToken<ArrayList<Integer>>() {
-//        }.getType();
-//        return gson.fromJson(json, type);
-//    }
-
     @Override
     public void shareQuote(String content, LinearLayout textview, CardView imageView) {
         //   showMenu(content,textview,imageView);
@@ -116,7 +106,6 @@ public class Quotes_screen_activity extends AppCompatActivity implements Quote_i
                     startActivity(Intent.createChooser(txtIntent, "Share"));
                 }
                 if (item.getTitle() == "As Image") {
-//                    Log.e("TAG", "onMenuItemClick: "+imageView);
                     loadView(imageView);
                 }
                 return false;
@@ -173,11 +162,10 @@ public class Quotes_screen_activity extends AppCompatActivity implements Quote_i
             storageDir.mkdirs();
         }
 
-
         File image = File.createTempFile(
                 "temp",                   /* prefix */
-                ".jpeg",                     /* suffix */
-                storageDir                   /* directory */
+                ".jpeg",                 /* suffix */
+                storageDir                    /* directory */
         );
         Log.e("image", "image===========" + image.getAbsolutePath());
         return image;
@@ -203,27 +191,7 @@ public class Quotes_screen_activity extends AppCompatActivity implements Quote_i
         //return the bitmap
         return returnedBitmap;
     }
-//
-//    public Bitmap loadBitmapFromView(View v) {
-//        DisplayMetrics dm = getResources().getDisplayMetrics();
-//        v.measure(View.MeasureSpec.makeMeasureSpec(dm.widthPixels, View.MeasureSpec.EXACTLY),
-//                View.MeasureSpec.makeMeasureSpec(dm.heightPixels, View.MeasureSpec.EXACTLY));
-//        v.layout(0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
-//        Bitmap returnedBitmap = Bitmap.createBitmap(v.getMeasuredWidth(),
-//                v.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-//        Canvas c = new Canvas(returnedBitmap);
-//        v.draw(c);
-//
-//        return returnedBitmap;
-//    }
-//
 
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(Quotes_screen_activity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
 
 
 }

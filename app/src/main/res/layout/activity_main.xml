@@ -1,45 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:openDrawer="start">
 
     <LinearLayout
         android:id="@+id/linear2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="7dp">
+        android:layout_marginTop="7dp"
+        android:orientation="horizontal">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="5dp"
-            android:src="@drawable/icon">
-
-        </de.hdodenhof.circleimageview.CircleImageView>
-
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:text="Learn in Life"
-            android:textSize="23sp"
-            android:textStyle="bold">
+            android:layout_marginTop="5dp">
 
-        </TextView>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/icon">
+
+            </de.hdodenhof.circleimageview.CircleImageView>
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/edit_query"
+            android:layout_width="300dp"
+            android:hint="search"
+            android:imeOptions="actionSearch"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp" />
+
 
         <com.varunest.sparkbutton.SparkButton
             android:id="@+id/favourite"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="140dp"
             app:sparkbutton_activeImage="@drawable/ic_heart_on"
             app:sparkbutton_iconSize="32dp" />
+
+        <!--        <de.hdodenhof.circleimageview.CircleImageView-->
+        <!--            android:layout_width="45dp"-->
+        <!--            android:layout_height="45dp"-->
+        <!--            android:layout_marginStart="10dp"-->
+        <!--            android:layout_marginBottom="5dp"-->
+        <!--            android:src="@drawable/icon">-->
+
+        <!--        </de.hdodenhof.circleimageview.CircleImageView>-->
+
+        <!--        <TextView-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="10dp"-->
+        <!--            android:layout_marginTop="5dp"-->
+        <!--            android:layout_marginBottom="5dp"-->
+        <!--            android:text="Learn in Life"-->
+        <!--            android:textSize="23sp"-->
+        <!--            android:textStyle="bold">-->
+
+        <!--        </TextView>-->
+
+        <!--        <com.varunest.sparkbutton.SparkButton-->
+        <!--            android:id="@+id/favourite"-->
+        <!--            android:layout_width="50dp"-->
+        <!--            android:layout_height="50dp"-->
+        <!--            android:layout_marginLeft="140dp"-->
+        <!--            app:sparkbutton_activeImage="@drawable/ic_heart_on"-->
+        <!--            app:sparkbutton_iconSize="32dp" />-->
 
         <!--        <TextView-->
         <!--            android:id="@+id/favourite"-->
@@ -49,12 +84,13 @@
         <!--            android:background="@drawable/favourite">-->
 
         <!--        </TextView>-->
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/linear2"
+        android:layout_marginTop="59dp"
         android:orientation="vertical">
 
         <androidx.core.widget.NestedScrollView
@@ -66,16 +102,6 @@
                 android:layout_height="match_parent"
                 android:layout_below="@+id/linear2"
                 android:orientation="vertical">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/horizontalview"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/horizontal">
-
-                </androidx.recyclerview.widget.RecyclerView>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/vartiview"
@@ -93,4 +119,4 @@
     </LinearLayout>
 
 
-</LinearLayout>
+</RelativeLayout>
